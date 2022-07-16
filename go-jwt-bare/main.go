@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v4"
+	"github.com/joho/godotenv"
 
 	"github.com/go-playground/validator"
 	jwtware "github.com/gofiber/jwt/v3"
@@ -30,9 +32,11 @@ func isValidParams(c *fiber.Ctx, params interface{}) bool {
 var userq *user.DBQuerier
 
 func init() {
+	godotenv.Load(".env")
+
 	ctx := context.Background()
 
-	conn, err := pgx.Connect(ctx, "postgres://postgres:123@localhost:5432/sandbox")
+	conn, err := pgx.Connect(ctx, os.Getenv("DB_URI"))
 
 	if err != nil {
 		panic(err)
